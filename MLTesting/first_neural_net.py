@@ -18,5 +18,37 @@ class FashionNetwork(nn.Module):
     def __init__(self):
         super().__init__()
         self.hidden1 = nn.Linear(784, 256)
+        self.hidden2 = nn.Linear(256, 128)
+        self.output = nn.Linear(128, 10)
+        self.activation = nn.ReLU()
+        self.log_softmax = nn.LogSoftmax()
 
-print(test_loader)
+    def forward(self, x):
+        x = self.hidden1(x)
+        x = self.activation(x)
+        x = self.hidden2(x)
+        x = self.activation(x)
+        x = self.output(x)
+        output = self.log_softmax(x)
+        return output
+
+
+model = FashionNetwork()
+criterion = nn.NLLLoss()
+
+print(model)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
