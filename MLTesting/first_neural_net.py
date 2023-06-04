@@ -42,7 +42,7 @@ optimizer = optim.Adam(model.parameters())
 
 # Training the model:
 
-epoch = 3   # How many rounds of training?
+epoch = int(str(sys.argv[1]))   # How many rounds of training?
 
 for i in range(epoch):
     running_loss = 0
@@ -60,7 +60,7 @@ for i in range(epoch):
 #  An example of looking at the first n-training images...
 def peek(n):
     for j in range(n):
-        tensor_image = train_set.data[i]
+        tensor_image = train_set.data[j]
         plt.imshow(tensor_image)
         plt.show()
 
