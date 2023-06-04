@@ -3,7 +3,6 @@ import numpy as np
 from torch import nn, optim
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
-import sys
 
 # This defines a transformation on the grid of training/test images to tensors
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, ), (0.5, )), ])
@@ -68,7 +67,7 @@ def peek(n):
 
 
 # Testing the trained model on the kth image-label pair
-def test_the_model(k):
+def model_sample(k):
     test_image_tensor = test_set[k][0]                                          # This is a 28 by 28 tensor. It needs reshaped before going into the model
     test_image_vector = test_image_tensor.view(test_image_tensor.shape[0], -1)  # We "unwrap" the image, so it matches the dimension of the first layer.
     prediction = model(test_image_vector)
@@ -88,33 +87,9 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.parameters())
 
 training(3)
-test_the_model(1)
-# Training the model:
-
-epoch = 3   # How many rounds of training?
-
-for i in range(epoch):
-    running_loss = 0
-    for image, label in train_loader:
-        optimizer.zero_grad()
-        image = image.view(image.shape[0], -1)
-        pred = model(image)
-        loss = criterion(pred, label)
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item()
-    print(f'Training loss: {running_loss / len(train_loader):.4f}')
+model_sample(1)
 
 
-#  An example of looking at the first n-training images...
-def peek(n):
-    for j in range(n):
-        tensor_image = train_set.data[j]
-        plt.imshow(tensor_image)
-        plt.show()
 
 
-# What is it trying to classify?
-tensor_image0 = test_set.data[0]
-plt.imshow(tensor_image0)
-plt.show()  # It's a shoe lol
+
