@@ -1,7 +1,8 @@
 import torch
 import numpy as np
-from torch import nn
+from torch import nn, optim
 from torchvision import datasets, transforms
+import matplotlib.pyplot as plt
 
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, ), (0.5, )), ])
 
@@ -12,7 +13,6 @@ train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shu
 
 test_set = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=False, transform=transform)
 test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=True)
-
 
 class FashionNetwork(nn.Module):
     def __init__(self):
@@ -35,16 +35,25 @@ class FashionNetwork(nn.Module):
 
 model = FashionNetwork()
 criterion = nn.NLLLoss()
-
-print(model)
-
+optimizer = optim.Adam(model.parameters())
 
 
-
-
-
-
-
+epoch = 10
+#
+# for i in range(epoch):
+#     running_loss = 0
+#     for image, label in train_loader:
+#         optimizer.zero_grad()
+#         image = image.view(image.shape[0], -1)
+#         pred = model(image)
+#         loss = criterion(pred, label)
+#         loss.backward()
+#         optimizer.step()
+#         running_loss += loss.item()
+#     print(f'Training loss: {running_loss / len(train_loader):.4f}')
+#
+tensor_image = train_set.data[0]
+plt.imshow(tensor_image)
 
 
 
