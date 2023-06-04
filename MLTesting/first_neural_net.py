@@ -66,14 +66,14 @@ def peek(n):
 
 
 # Testing the trained model on the first image-label pair
-test_image = test_set[0][0].view(test_set[0][0].shape[0], -1)   # We need to "unwrap" the image so it matches the dimension
+test_image = test_set[0][0].view(test_set[0][0].shape[0], -1)   # We need to "unwrap" the image, so it matches the dimension
 prediction = model(test_image)                                  # of the first layer.
 print("Model Prediction: ", prediction)
 print("Actual Label: ", test_set[0][1])
 
 # What is it trying to classify?
 tensor_image0 = test_set.data[0]
-plt.imshow(tensor_image)
+plt.imshow(tensor_image0)
 plt.show()  # It's a shoe lol
 
 
