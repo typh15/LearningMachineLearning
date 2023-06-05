@@ -3,6 +3,7 @@ import numpy as np
 from torch import nn, optim
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
+from random import sample
 
 # This defines a transformation on the grid of training/test images to tensors
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, ), (0.5, )), ])
@@ -23,28 +24,47 @@ class FashionNetwork(nn.Module):
         super().__init__()
         self.hidden1 = nn.Linear(784, 128)
         self.hidden2 = nn.Linear(128, 128)
-        self.hidden3 = nn.Linear(128, 128)
-        self.hidden4 = nn.Linear(128, 64)
+        self.hidden3 = nn.Linear(128, 64)
         self.output = nn.Linear(64, 10)
         self.activation = nn.ReLU()
         self.softmax = nn.Softmax()
+        self.drop = nn.Dropout(p=0.25)
 
     def forward(self, x):
         x = self.hidden1(x)
         x = self.activation(x)
+        x = self.drop(x)
         x = self.hidden2(x)
         x = self.activation(x)
+        x = self.drop(x)
         x = self.hidden3(x)
         x = self.activation(x)
-        x = self.hidden4(x)
-        x = self.activation(x)
+        x = self.drop(x)
         x = self.output(x)
         output = self.softmax(x)
         return output
 
 
+def model_testing(n, display=True):
+    correct = 0
+    samples = sample(range(10000), n)
+    for k in samples:
+        test_image_tensor = test_set[k][0]                                          # This is a 28 by 28 tensor. It needs reshaped before going into the model
+        test_image_vector = test_image_tensor.view(test_image_tensor.shape[0], -1)  # We "unwrap" the image, so it matches the dimension of the first layer.
+        prediction = model(test_image_vector)
+        if int(prediction.argmax()) == test_set[k][1]:
+            if display:
+                print("Correct: Image", k)
+            correct += 1
+        if int(prediction.argmax()) != test_set[k][1]:
+            if display:
+                print("Incorrect: Image", k)
+    return correct/n
+
+
 # Training the model:
-def training(epochs):   # How many rounds of training? epochs
+def training(epochs, sample_test_num):   # How many rounds of training? epochs
+    total_accuracy = [0]
     for i in range(epochs):
         running_loss = 0
         for image, label in train_loader:
@@ -55,7 +75,13 @@ def training(epochs):   # How many rounds of training? epochs
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
+        accuracy = model_testing(sample_test_num, False)
+        print("Epoch: ", i+1)
         print(f'Training loss: {running_loss / len(train_loader):.4f}')
+        print("Accuracy out of ", sample_test_num, ":   ", accuracy)
+        print("")
+        total_accuracy.append(accuracy)
+    return total_accuracy
 
 
 #  Looking at the first n-training images...
@@ -81,15 +107,11 @@ def model_sample(k):
     plt.show()
 
 
+
 #   Instantiating the Network:
 model = FashionNetwork()
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.parameters())
 
-training(3)
-model_sample(1)
-
-
-
-
+print(training(5, 200))
 

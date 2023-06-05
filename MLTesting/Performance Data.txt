@@ -1,0 +1,24 @@
+
+# No Drops
+model1_sig = [784, 256, 128, 64, 10]  # [nodes per layer]
+model1_res = [0, 0.755, 0.815, 0.88, 0.83, 0.815]  # [accuracy per epoch(with 200 random samples)]
+
+model2_sig = [784, 256, 256, 256, 10]  # [nodes per layer]
+model2_res = [0, 0.735, 0.795, 0.82, 0.82, 0.81]  # [accuracy per epoch(with 200 random samples)]
+
+model3_sig = [784, 64, 10]  # [nodes per layer]
+model3_res = [0, 0.835, 0.82, 0.84, 0.835, 0.9]  # [accuracy per epoch(with 200 random samples)]
+
+model4_sig = [784, 64, 10]  # [nodes per layer]
+model4_res = [0, 0.8, 0.84, 0.805, 0.875, 0.81]  # [accuracy per epoch(with 200 random samples)]
+
+
+# With Drops
+drop_model1_sig = [784, 128, 64, 10]  # [nodes per layer]
+drop_rate1 = 0.25  # [nodes per layer]
+drop_model1_res = [0, 0.72, 0.83, 0.835, 0.78, 0.795]  # [accuracy per epoch(with 200 random samples)]
+
+drop_model2_sig = [784, 128, 128, 64, 10]  # [nodes per layer]
+drop_rate2 = 0.25  # [nodes per layer]
+drop_model2_res = [0, 0.785, 0.755, 0.83, 0.785, 0.835]  # [accuracy per epoch(with 200 random samples)]
+
