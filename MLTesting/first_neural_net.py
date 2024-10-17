@@ -11,14 +11,15 @@ transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5
 
 batch_size = 64
 
-train_set = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=True, transform=transform)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
+train_set = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=True,  transform=transform)
+test_set  = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=False, transform=transform)
 
-test_set = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=False, transform=transform)
-test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=True)
+print(train_set)
+
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
+test_loader  = torch.utils.data.DataLoader(test_set,  batch_size=batch_size, shuffle=True)
 
 # The train_set and test_set objects are tuples (data, label)
-
 
 class FashionNetwork(nn.Module):
     def __init__(self):
@@ -26,7 +27,7 @@ class FashionNetwork(nn.Module):
         self.hidden1 = nn.Linear(784, 128)
         self.hidden2 = nn.Linear(128, 128)
         self.hidden3 = nn.Linear(128, 64)
-        self.output = nn.Linear(64, 10)
+        self.output  = nn.Linear(64, 10)
 
     def forward(self, x):
         x = F.dropout(F.relu(self.hidden1(x)), p=0.25)
@@ -78,9 +79,20 @@ def training(epochs, sample_test_num):   # How many rounds of training? epochs
 
 
 #  Looking at the first n-training images...
-def peek(n):
-    for j in range(n):
-        tensor_image = train_set.data[j]
+def peek(a, b, train = 1):
+    if a < b:
+        for j in range(a, b + 1):
+            if train:
+                tensor_image = train_set.data[j]
+            else:
+                tensor_image = test_set.data[j]
+            plt.imshow(tensor_image)
+            plt.show()
+    if a == b:
+        if train:
+            tensor_image = train_set.data[a]
+        else:
+            tensor_image = test_set.data[a]
         plt.imshow(tensor_image)
         plt.show()
 
@@ -107,5 +119,14 @@ model = FashionNetwork()
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.parameters())
 
-print(training(5, 200))
+#print(training(5, 200))
 
+
+#model_sample(1)
+
+peek(1, 1)
+
+print(train_set.data[1])
+
+plt.imshow(train_set.data[1])
+plt.show()
